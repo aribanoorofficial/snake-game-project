@@ -1,0 +1,347 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+:root {
+    --bg-gradient-start: #0f172a;
+    --bg-gradient-end: #020617;
+    --snake-color: #39FF14;
+    --snake-glow: rgba(57, 255, 20, 0.7);
+    --food-color: #FF3131;
+    --food-glow: rgba(255, 49, 49, 0.8);
+    --board-bg: rgba(15, 23, 42, 0.8);
+    --grid-color: rgba(255, 255, 255, 0.04);
+    --text-color: #e2e8f0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: var(--text-color);
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    touch-action: none;
+    /* Extra padding at bottom to ensure footer is visible */
+    padding-bottom: 10px;
+}
+
+.game-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    /* Reduced gap to fit content */
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    max-width: 95vw;
+    max-height: 96dvh;
+    /* Made slightly smaller than 100dvh */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: min(95vw, 65vh);
+    max-width: 600px;
+    align-items: center;
+}
+
+.score-board {
+    font-size: 18px;
+    /* Reduced */
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Reduced */
+    letter-spacing: 1px;
+}
+
+.score-value {
+    color: var(--snake-color);
+    text-shadow: 0 0 15px var(--snake-glow);
+    font-size: 24px;
+    /* Reduced */
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-block;
+}
+
+.board-wrapper {
+    position: relative;
+    /* More aggressive height reduction to make room for bottom elements */
+    width: min(90vw, calc(100dvh - 330px));
+    height: min(90vw, calc(100dvh - 330px));
+    max-width: 500px;
+    max-height: 500px;
+    min-width: 200px;
+    /* Reduced min allowed size */
+    min-height: 200px;
+    /* Reduced min allowed size */
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 15px var(--snake-glow);
+    overflow: hidden;
+    background-color: var(--board-bg);
+    border: 2px solid rgba(255, 255, 255, 0.07);
+    flex-shrink: 0;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(6px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 10;
+}
+
+.overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.game-over-text {
+    font-size: clamp(24px, 8vw, 42px);
+    /* Reduced */
+    color: var(--food-color);
+    text-shadow: 0 0 25px var(--food-glow);
+    margin-bottom: 10px;
+    /* Reduced */
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+
+.final-score {
+    font-size: clamp(14px, 4vw, 20px);
+    /* Reduced */
+    margin-bottom: 20px;
+    /* Reduced */
+    color: #94a3b8;
+    letter-spacing: 1px;
+}
+
+.final-score span {
+    color: var(--snake-color);
+    font-weight: 700;
+    font-size: clamp(20px, 6vw, 28px);
+    /* Reduced */
+    text-shadow: 0 0 10px var(--snake-glow);
+    margin-left: 8px;
+}
+
+.restart-btn {
+    background: transparent;
+    color: var(--snake-color);
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(12px, 4vw, 16px);
+    /* Reduced */
+    font-weight: 700;
+    padding: 8px 20px;
+    /* Reduced */
+    border: 2px solid var(--snake-color);
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.3), inset 0 0 15px rgba(57, 255, 20, 0.2);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.restart-btn:hover {
+    background: var(--snake-color);
+    color: #020617;
+    box-shadow: 0 0 35px var(--snake-glow), inset 0 0 20px rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
+}
+
+.restart-btn:active {
+    transform: translateY(1px);
+}
+
+.controls-hint {
+    margin-top: 2px;
+    /* Reduced */
+    color: #94a3b8;
+    font-size: 12px;
+    /* Reduced */
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 0.5px;
+}
+
+/* D-PAD Controls */
+.dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 65px);
+    /* Increased size */
+    grid-template-rows: repeat(3, 65px);
+    /* Increased size */
+    gap: 6px;
+    margin-top: 5px;
+}
+
+.dpad-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    /* Scaled up */
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.dpad-btn:active,
+.dpad-btn.active {
+    background: rgba(57, 255, 20, 0.2);
+    border-color: var(--snake-color);
+    box-shadow: 0 0 15px var(--snake-glow);
+    transform: scale(0.95);
+    color: var(--snake-color);
+}
+
+.dpad-up {
+    grid-column: 2;
+    grid-row: 1;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.dpad-left {
+    grid-column: 1;
+    grid-row: 2;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+
+.dpad-right {
+    grid-column: 3;
+    grid-row: 2;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.dpad-down {
+    grid-column: 2;
+    grid-row: 3;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.dpad-center {
+    grid-column: 2;
+    grid-row: 2;
+    border-radius: 50%;
+    /* Override for the stop button, coloring it slightly differently */
+    background: rgba(255, 49, 49, 0.1);
+    border-color: rgba(255, 49, 49, 0.3);
+    color: var(--food-color);
+    font-size: 20px;
+    transition: all 0.2s ease;
+}
+
+.dpad-center.paused {
+    background: rgba(255, 49, 49, 0.4);
+    border-color: var(--food-color);
+    box-shadow: 0 0 15px var(--food-glow);
+    animation: pulsePause 1s infinite alternate;
+}
+
+@keyframes pulsePause {
+    from {
+        opacity: 1;
+        box-shadow: 0 0 10px var(--food-glow);
+    }
+
+    to {
+        opacity: 0.6;
+        box-shadow: 0 0 20px var(--food-glow);
+    }
+}
+
+.dpad-center:active,
+.dpad-center.active {
+    background: rgba(255, 49, 49, 0.3);
+    border-color: var(--food-color);
+    box-shadow: 0 0 15px var(--food-glow);
+    color: var(--text-color);
+}
+
+.footer {
+    margin-top: 5px;
+    color: var(--snake-color);
+    font-size: 12px;
+    /* Reduced slightly */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px var(--snake-glow);
+    font-weight: 700;
+}
+
+/* Media Queries for sizing */
+@media (max-width: 480px),
+(max-height: 700px) {
+    .dpad {
+        grid-template-columns: repeat(3, 55px);
+        /* Scaled appropriately for mobile */
+        grid-template-rows: repeat(3, 55px);
+        gap: 6px;
+    }
+
+    .dpad-btn {
+        font-size: 20px;
+    }
+
+    .controls-hint {
+        font-size: 11px;
+        /* Reduced */
+    }
+
+    .footer {
+        font-size: 10px;
+        /* Reduced */
+    }
+
+    /* Even more aggressive height reduction for very small screens */
+    .board-wrapper {
+        width: min(90vw, calc(100dvh - 300px));
+        height: min(90vw, calc(100dvh - 300px));
+    }
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Snake Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="game-container">
+        <div class="header">
+            <div class="score-board">
+                SCORE <span class="score-value" id="score">0</span>
+            </div>
+        </div>
+
+        <div class="board-wrapper">
+            <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+            <div class="overlay" id="gameOverOverlay">
+                <div class="game-over-text">Game Over</div>
+                <div class="final-score">FINAL SCORE<span>0</span></div>
+                <button class="restart-btn" id="restartBtn">Play Again</button>
+            </div>
+        </div>
+
+        <div class="controls-hint">
+            Controls: WASD, Arrows, Swipe, or Buttons
+        </div>
+
+        <div class="dpad">
+            <div class="dpad-btn dpad-up" id="btn-up">▲</div>
+            <div class="dpad-btn dpad-left" id="btn-left">◀</div>
+            <div class="dpad-btn dpad-center" id="btn-stop">■</div>
+            <div class="dpad-btn dpad-right" id="btn-right">▶</div>
+            <div class="dpad-btn dpad-down" id="btn-down">▼</div>
+        </div>
+
+        <div class="footer">developed by Ariba Noor</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
