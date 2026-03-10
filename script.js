@@ -173,7 +173,17 @@ function drawSnake() {
 }
 
 function advanceSnake() {
-    const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+    let newX = snake[0].x + dx;
+    let newY = snake[0].y + dy;
+
+    // Wrap around logic
+    if (newX < 0) newX = TILE_COUNT - 1;
+    else if (newX >= TILE_COUNT) newX = 0;
+
+    if (newY < 0) newY = TILE_COUNT - 1;
+    else if (newY >= TILE_COUNT) newY = 0;
+
+    const head = { x: newX, y: newY };
     snake.unshift(head);
 
     // Reached food
@@ -258,10 +268,8 @@ function drawFood() {
 function checkCollision() {
     const head = snake[0];
 
-    if (head.x < 0 || head.x >= TILE_COUNT || head.y < 0 || head.y >= TILE_COUNT) {
-        return true;
-    }
-
+    // Wall collisions are no longer checked since we wrap around.
+    // We only check for self-collision now.
     for (let i = 1; i < snake.length; i++) {
         if (head.x === snake[i].x && head.y === snake[i].y) {
             return true;
