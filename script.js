@@ -132,7 +132,39 @@ function drawSnake() {
     // Draw path through centers of all snake segments
     ctx.moveTo(snake[0].x * GRID_SIZE + GRID_SIZE / 2, snake[0].y * GRID_SIZE + GRID_SIZE / 2);
     for (let i = 1; i < snake.length; i++) {
-        ctx.lineTo(snake[i].x * GRID_SIZE + GRID_SIZE / 2, snake[i].y * GRID_SIZE + GRID_SIZE / 2);
+        const prev = snake[i - 1];
+        const curr = snake[i];
+
+        if (Math.abs(prev.x - curr.x) > 1 || Math.abs(prev.y - curr.y) > 1) {
+            let splitX1, splitY1, splitX2, splitY2;
+            if (prev.x === 0 && curr.x === TILE_COUNT - 1) {
+                splitX1 = -0.5; splitY1 = prev.y;
+                splitX2 = TILE_COUNT - 0.5; splitY2 = curr.y;
+            } else if (prev.x === TILE_COUNT - 1 && curr.x === 0) {
+                splitX1 = TILE_COUNT - 0.5; splitY1 = prev.y;
+                splitX2 = -0.5; splitY2 = curr.y;
+            } else if (prev.y === 0 && curr.y === TILE_COUNT - 1) {
+                splitX1 = prev.x; splitY1 = -0.5;
+                splitX2 = curr.x; splitY2 = TILE_COUNT - 0.5;
+            } else if (prev.y === TILE_COUNT - 1 && curr.y === 0) {
+                splitX1 = prev.x; splitY1 = TILE_COUNT - 0.5;
+                splitX2 = curr.x; splitY2 = -0.5;
+            }
+
+            if (splitX1 !== undefined) {
+                ctx.lineTo(splitX1 * GRID_SIZE + GRID_SIZE / 2, splitY1 * GRID_SIZE + GRID_SIZE / 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(splitX2 * GRID_SIZE + GRID_SIZE / 2, splitY2 * GRID_SIZE + GRID_SIZE / 2);
+                ctx.lineTo(curr.x * GRID_SIZE + GRID_SIZE / 2, curr.y * GRID_SIZE + GRID_SIZE / 2);
+            } else {
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(curr.x * GRID_SIZE + GRID_SIZE / 2, curr.y * GRID_SIZE + GRID_SIZE / 2);
+            }
+        } else {
+            ctx.lineTo(curr.x * GRID_SIZE + GRID_SIZE / 2, curr.y * GRID_SIZE + GRID_SIZE / 2);
+        }
     }
     ctx.stroke();
 
