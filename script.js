@@ -20,7 +20,6 @@ const COLOR_GRID = 'rgba(255, 255, 255, 0.04)';
 // Game State
 let snake = [];
 let food = {};
-let hurdles = [];
 let dx = 0;
 let dy = 0;
 let score = 0;
@@ -61,19 +60,6 @@ function initGame() {
 
     overlay.classList.remove('active');
 
-    // Setup 2 simple vertical hurdles as seen in Nokia screenshot
-    // Each hurdle is a line of 6 blocks
-    hurdles = [];
-    const h1x = Math.floor(TILE_COUNT * 0.35);
-    const h2x = Math.floor(TILE_COUNT * 0.65);
-    const hStartY = Math.floor(TILE_COUNT * 0.35);
-    const hEndY = Math.floor(TILE_COUNT * 0.65);
-
-    for (let y = hStartY; y <= hEndY; y++) {
-        hurdles.push({ x: h1x, y: y });
-        hurdles.push({ x: h2x, y: y });
-    }
-
     spawnFood();
 
     if (gameLoop) clearTimeout(gameLoop);
@@ -104,7 +90,6 @@ function render() {
 
     clearCanvas();
     drawGrid();
-    drawHurdles();
     drawFood();
     drawSnake();
 
@@ -253,18 +238,6 @@ function advanceSnake() {
     }
 }
 
-function drawHurdles() {
-    ctx.fillStyle = '#94a3b8'; // Matching the control hint text color for a sleek look
-    ctx.shadowBlur = 5;
-    ctx.shadowColor = '#94a3b8';
-
-    for (let h of hurdles) {
-        ctx.fillRect(h.x * GRID_SIZE + 1, h.y * GRID_SIZE + 1, GRID_SIZE - 2, GRID_SIZE - 2);
-    }
-
-    ctx.shadowBlur = 0;
-}
-
 function spawnFood() {
     let validSpawn = false;
     foodScale = 0; // Reset animation scale
@@ -279,16 +252,6 @@ function spawnFood() {
             if (part.x === food.x && part.y === food.y) {
                 validSpawn = false;
                 break;
-            }
-        }
-
-        // Also check if food spawned inside a hurdle
-        if (validSpawn) {
-            for (let h of hurdles) {
-                if (h.x === food.x && h.y === food.y) {
-                    validSpawn = false;
-                    break;
-                }
             }
         }
     }
@@ -338,15 +301,9 @@ function checkCollision() {
     const head = snake[0];
 
     // Wall collisions are no longer checked since we wrap around.
-    // We check for self-collision and hurdle collision
+    // We only check for self-collision now.
     for (let i = 1; i < snake.length; i++) {
         if (head.x === snake[i].x && head.y === snake[i].y) {
-            return true;
-        }
-    }
-
-    for (let h of hurdles) {
-        if (head.x === h.x && head.y === h.y) {
             return true;
         }
     }
