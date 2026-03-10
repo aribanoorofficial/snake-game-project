@@ -131,15 +131,16 @@ canvas {
 }
 
 .game-over-text {
-    font-size: clamp(24px, 8vw, 42px);
-    /* Reduced */
+    font-size: clamp(20px, 6vw, 42px);
+    /* Slightly smaller to ensure fit on one line */
     color: var(--food-color);
     text-shadow: 0 0 25px var(--food-glow);
-    margin-bottom: 10px;
-    /* Reduced */
+    margin-bottom: 15px;
     text-transform: uppercase;
     letter-spacing: 3px;
     font-weight: 700;
+    white-space: nowrap;
+    /* Forces text to stay on one line */
 }
 
 .final-score {
