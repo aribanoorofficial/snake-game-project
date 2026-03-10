@@ -123,6 +123,9 @@ canvas {
     pointer-events: none;
     transition: opacity 0.5s ease;
     z-index: 10;
+    padding: 12px;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .overlay.active {
@@ -131,16 +134,19 @@ canvas {
 }
 
 .game-over-text {
-    font-size: clamp(20px, 6vw, 42px);
-    /* Slightly smaller to ensure fit on one line */
+    font-size: clamp(16px, 5.5vmin, 34px);
     color: var(--food-color);
     text-shadow: 0 0 25px var(--food-glow);
     margin-bottom: 15px;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     font-weight: 700;
     white-space: nowrap;
-    /* Forces text to stay on one line */
+    text-align: center;
+    max-width: 100%;
+    /* Scale down if still too wide */
+    transform-origin: center;
+    width: 100%;
 }
 
 .final-score {
